@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Re:Story ツール</title>
+<meta name="theme-color" content="#141b2e">
+<link rel="icon" type="image/png" href="icon-breath-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;600&family=Zen+Kaku+Gothic+New:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--night:#141b2e;--night2:#1c2540;--thread:#7fa8d9;--thread-dim:#3a4a6e;--ink:#e8ecf4;--ink-dim:#8b96ad;--accent:#c9d9f0}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:radial-gradient(120% 90% at 50% 0%,var(--night2) 0%,var(--night) 60%);color:var(--ink);font-family:'Zen Kaku Gothic New',sans-serif;min-height:100dvh;display:flex;flex-direction:column;align-items:center;padding:48px 20px}
+.brand{font-size:11px;letter-spacing:.35em;color:var(--ink-dim);text-transform:uppercase}
+h1{font-family:'Shippori Mincho',serif;font-weight:600;font-size:22px;letter-spacing:.12em;margin:8px 0 36px;color:var(--accent)}
+.cards{display:flex;flex-direction:column;gap:16px;width:100%;max-width:400px}
+a.card{display:flex;gap:16px;align-items:center;text-decoration:none;color:var(--ink);border:1px solid var(--thread-dim);border-radius:18px;padding:18px;transition:border-color .2s;background:rgba(127,168,217,.05)}
+a.card:hover{border-color:var(--thread)}
+.card img{width:56px;height:56px;border-radius:14px}
+.card h2{font-family:'Shippori Mincho',serif;font-size:16px;font-weight:600;letter-spacing:.08em}
+.card p{font-size:12.5px;color:var(--ink-dim);margin-top:4px;line-height:1.7}
+.hint{margin-top:32px;font-size:12px;color:var(--ink-dim);line-height:2;text-align:center;max-width:340px}
+.sig{margin-top:28px;font-size:10.5px;letter-spacing:.3em;color:var(--thread-dim)}
+</style>
+</head>
+<body>
+<div class="brand">Re:Story</div>
+<h1>感情と向き合う道具箱</h1>
+<div class="cards">
+  <a class="card" href="./breath.html">
+    <img src="icon-breath-192.png" alt="">
+    <div><h2>呼吸</h2><p>爆発の瞬間をしのぐ。生理学的ため息・4-7-8・ボックス呼吸。</p></div>
+  </a>
+  <a class="card" href="./journal.html">
+    <img src="icon-journal-192.png" alt="">
+    <div><h2>声のジャーナル</h2><p>話すだけで記録。Obsidianに直接保存できます。</p></div>
+  </a>
+</div>
+<p class="hint">各アプリを開いて、ブラウザのメニューから<br>「ホーム画面に追加」すると<br>アプリとして使えるようになります。</p>
+<div class="sig">BLUELOOM ／ 青鳥あおい</div>
+</body>
+</html>

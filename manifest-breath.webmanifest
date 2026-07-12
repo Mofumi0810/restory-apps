@@ -1,0 +1,16 @@
+{
+  "name": "Re:Story 呼吸",
+  "short_name": "呼吸",
+  "description": "爆発の瞬間をしのぐ呼吸ガイド",
+  "start_url": "./breath.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#141b2e",
+  "theme_color": "#141b2e",
+  "icons": [
+    { "src": "icon-breath-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-breath-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icon-breath-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Re:Story 呼吸 — 爆発の瞬間をしのぐ</title>
+<link rel="manifest" href="manifest-breath.webmanifest">
+<meta name="theme-color" content="#141b2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="呼吸">
+<link rel="apple-touch-icon" href="icon-breath-apple.png">
+<link rel="icon" type="image/png" href="icon-breath-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;600&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#141b2e;
+  --night2:#1c2540;
+  --thread:#7fa8d9;
+  --thread-dim:#3a4a6e;
+  --ink:#e8ecf4;
+  --ink-dim:#8b96ad;
+  --accent:#c9d9f0;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  background:radial-gradient(120% 90% at 50% 0%, var(--night2) 0%, var(--night) 60%);
+  color:var(--ink);
+  font-family:'Zen Kaku Gothic New',sans-serif;
+  display:flex;flex-direction:column;align-items:center;
+  min-height:100dvh;
+  padding:20px 16px calc(16px + env(safe-area-inset-bottom));
+  user-select:none;-webkit-user-select:none;
+}
+header{text-align:center;margin-bottom:6px}
+.brand{font-size:11px;letter-spacing:.35em;color:var(--ink-dim);text-transform:uppercase}
+h1{
+  font-family:'Shippori Mincho',serif;font-weight:600;
+  font-size:20px;letter-spacing:.12em;margin-top:6px;color:var(--accent);
+}
+.modes{display:flex;gap:8px;margin:18px 0 4px;flex-wrap:wrap;justify-content:center}
+.mode{
+  border:1px solid var(--thread-dim);border-radius:999px;
+  background:transparent;color:var(--ink-dim);
+  font-family:inherit;font-size:13px;font-weight:500;
+  padding:8px 16px;cursor:pointer;transition:all .25s;
+}
+.mode.active{border-color:var(--thread);color:var(--ink);background:rgba(127,168,217,.1)}
+.mode-desc{font-size:12px;color:var(--ink-dim);text-align:center;min-height:2.4em;margin-top:8px;line-height:1.7;max-width:300px}
+.stage{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  width:100%;min-height:300px;position:relative;
+}
+.loom{position:relative;width:min(72vw,280px);height:min(72vw,280px)}
+svg.ring{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+.ring-bg{fill:none;stroke:var(--thread-dim);stroke-width:1.5;opacity:.5}
+.ring-fg{
+  fill:none;stroke:var(--thread);stroke-width:2.5;stroke-linecap:round;
+  stroke-dasharray:565.5;stroke-dashoffset:565.5;
+}
+.orb{
+  position:absolute;inset:0;margin:auto;
+  width:54%;height:54%;border-radius:50%;
+  background:radial-gradient(circle at 38% 32%, rgba(201,217,240,.35), rgba(127,168,217,.12) 60%, transparent);
+  border:1px solid rgba(127,168,217,.35);
+  transform:scale(.72);
+  display:flex;align-items:center;justify-content:center;flex-direction:column;
+  transition:transform .3s;
+}
+.phase{
+  font-family:'Shippori Mincho',serif;font-size:22px;font-weight:600;
+  letter-spacing:.15em;color:var(--ink);text-align:center;line-height:1.5;
+}
+.count{font-size:13px;color:var(--ink-dim);margin-top:4px;font-variant-numeric:tabular-nums}
+.cycles{margin-top:10px;font-size:13px;color:var(--ink-dim);letter-spacing:.1em;min-height:1.4em}
+.cycsel{display:flex;gap:16px;align-items:center;margin-top:20px}
+.step{
+  width:36px;height:36px;border-radius:50%;
+  border:1px solid var(--thread-dim);background:transparent;
+  color:var(--ink);font-size:18px;line-height:1;cursor:pointer;
+}
+.step:active{border-color:var(--thread)}
+#cycVal{font-size:13px;color:var(--ink-dim);letter-spacing:.1em;min-width:74px;text-align:center}
+.controls{display:flex;gap:10px;align-items:center;margin-top:6px}
+.go{
+  font-family:'Shippori Mincho',serif;font-weight:600;font-size:16px;letter-spacing:.25em;
+  padding:14px 42px;border-radius:999px;cursor:pointer;
+  border:1px solid var(--thread);color:var(--night);
+  background:linear-gradient(180deg,var(--accent),var(--thread));
+  transition:opacity .2s;
+}
+.go.stop{background:transparent;color:var(--ink-dim);border-color:var(--thread-dim)}
+.tgl{
+  border:1px solid var(--thread-dim);border-radius:999px;background:transparent;
+  color:var(--ink-dim);font-family:inherit;font-size:12px;padding:10px 13px;cursor:pointer;
+}
+.tgl.on{color:var(--ink);border-color:var(--thread)}
+footer{margin-top:26px;text-align:center;max-width:320px}
+.doctrine{
+  font-family:'Shippori Mincho',serif;font-size:13.5px;line-height:2;
+  color:var(--ink-dim);
+}
+.doctrine em{font-style:normal;color:var(--accent)}
+footer a{
+  display:inline-block;margin-top:12px;font-size:12.5px;color:var(--thread);
+  text-decoration:none;border-bottom:1px solid var(--thread-dim);padding-bottom:2px;
+  letter-spacing:.05em;
+}
+.sig{margin-top:14px;font-size:10.5px;letter-spacing:.3em;color:var(--thread-dim)}
+@media (prefers-reduced-motion: reduce){
+  .orb,.ring-fg{transition:none !important}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">Re:Story</div>
+  <h1>爆発の瞬間を、しのぐ呼吸</h1>
+</header>
+
+<div class="modes" id="modes"></div>
+<div class="mode-desc" id="modeDesc"></div>
+
+<div class="stage">
+  <div class="loom">
+    <svg class="ring" viewBox="0 0 200 200">
+      <circle class="ring-bg" cx="100" cy="100" r="90"/>
+      <circle class="ring-fg" id="ringFg" cx="100" cy="100" r="90"/>
+    </svg>
+    <div class="orb" id="orb">
+      <div class="phase" id="phase">準備OK</div>
+      <div class="count" id="count"></div>
+    </div>
+  </div>
+  <div class="cycsel" id="cycSel">
+    <button class="step" id="cycMinus">−</button>
+    <span id="cycVal">3サイクル</span>
+    <button class="step" id="cycPlus">＋</button>
+  </div>
+  <div class="cycles" id="cycles"></div>
+</div>
+
+<div class="controls">
+  <button class="tgl" id="sndBtn">音 OFF</button>
+  <button class="go" id="goBtn">はじめる</button>
+  <button class="tgl" id="vibBtn">振動 OFF</button>
+</div>
+
+<footer>
+  <p class="doctrine">呼吸は、爆発の瞬間をしのぐためのもの。<br>怒りの<em>根っこ</em>は、別の場所にある。</p>
+  <a href="https://aotoriaoi.blueloom.jp/p/DaFpYi66okvP" target="_blank" rel="noopener">→ 感情のクセを読み解く（無料診断）</a>
+  <div class="sig">BLUELOOM ／ 青鳥あおい</div>
+</footer>
+
+<script>
+const MODES = {
+  sigh: {
+    name: '生理学的ため息',
+    desc: '鼻から吸って、もう一度短く吸い足し、口から長く吐く。爆発の直前に最短で効く型。',
+    phases: [
+      {label:'吸って', sec:2.5, scale:1.0,  snd:'in'},
+      {label:'もう一度', sec:2, scale:1.12, snd:'in2'},
+      {label:'長く吐く', sec:7,  scale:.62,  snd:'out'},
+    ],
+    cycles: 3
+  },
+  four78: {
+    name: '4-7-8',
+    desc: '4秒吸って、7秒止めて、8秒かけて吐く。眠る前や、余韻が残っているときに。',
+    phases: [
+      {label:'吸って', sec:4, scale:1.08, snd:'in'},
+      {label:'止める', sec:7, scale:1.08, snd:'hold'},
+      {label:'吐く',   sec:8, scale:.62,  snd:'out'},
+    ],
+    cycles: 4
+  },
+  box: {
+    name: 'ボックス',
+    desc: '吸う・止める・吐く・止める、を4秒ずつ。会議前など、静かに整えたいときに。',
+    phases: [
+      {label:'吸って', sec:4, scale:1.08, snd:'in'},
+      {label:'止める', sec:4, scale:1.08, snd:'hold'},
+      {label:'吐く',   sec:4, scale:.62,  snd:'out'},
+      {label:'止める', sec:4, scale:.62,  snd:'hold'},
+    ],
+    cycles: 4
+  }
+};
+
+const CIRC = 2 * Math.PI * 90;
+let modeKey = 'sigh';
+let running = false;
+let tickTimer = null, phaseTimer = null;
+let vib = false;
+
+const $ = id => document.getElementById(id);
+const orb=$('orb'), phaseEl=$('phase'), countEl=$('count'),
+      cyclesEl=$('cycles'), goBtn=$('goBtn'), ringFg=$('ringFg'),
+      vibBtn=$('vibBtn'), sndBtn=$('sndBtn'), modeDesc=$('modeDesc'), modesEl=$('modes'),
+      cycSel=$('cycSel'), cycVal=$('cycVal');
+let cyclesCount = MODES[modeKey].cycles;
+function updateCycVal(){ cycVal.textContent = cyclesCount + 'サイクル'; }
+$('cycMinus').onclick=()=>{ if(running) return; cyclesCount=Math.max(1,cyclesCount-1); updateCycVal(); };
+$('cycPlus').onclick =()=>{ if(running) return; cyclesCount=Math.min(10,cyclesCount+1); updateCycVal(); };
+
+/* ------- サウンド（Web Audio・外部ファイルなし） ------- */
+const Snd = {
+  ctx:null, on:false, master:null, padGain:null, padOscs:[], breath:null,
+  init(){
+    if(this.ctx) return;
+    const AC = window.AudioContext || window.webkitAudioContext;
+    this.ctx = new AC();
+    this.master = this.ctx.createGain();
+    this.master.gain.value = 0;
+    this.master.connect(this.ctx.destination);
+    // アンビエントパッド：低い5度のドローン＋ローパス
+    const lp = this.ctx.createBiquadFilter();
+    lp.type='lowpass'; lp.frequency.value=420; lp.Q.value=.4;
+    this.padGain = this.ctx.createGain();
+    this.padGain.gain.value = .05;
+    [110, 165, 220.5].forEach((f,i)=>{
+      const o=this.ctx.createOscillator();
+      o.type='sine'; o.frequency.value=f; o.detune.value=(i-1)*4;
+      o.connect(this.padGain); o.start();
+      this.padOscs.push(o);
+    });
+    this.padGain.connect(lp); lp.connect(this.master);
+    // ゆっくり揺れるLFO
+    const lfo=this.ctx.createOscillator(), lfoG=this.ctx.createGain();
+    lfo.frequency.value=.08; lfoG.gain.value=.018;
+    lfo.connect(lfoG); lfoG.connect(this.padGain.gain); lfo.start();
+  },
+  async enable(){
+    this.init();
+    if(this.ctx.state==='suspended') await this.ctx.resume();
+    this.on=true;
+    this.master.gain.setTargetAtTime(.9, this.ctx.currentTime, .5);
+  },
+  disable(){
+    this.on=false;
+    if(this.master) this.master.gain.setTargetAtTime(0, this.ctx.currentTime, .3);
+  },
+  // 呼吸ガイド音：吸うと上がり、吐くと下がる
+  cue(kind, sec){
+    if(!this.on) return;
+    const t=this.ctx.currentTime;
+    if(this.breath){ try{this.breath.osc.stop(t+.05)}catch(e){} }
+    const osc=this.ctx.createOscillator(), g=this.ctx.createGain();
+    osc.type='triangle';
+    const lp=this.ctx.createBiquadFilter();
+    lp.type='lowpass'; lp.frequency.value=900;
+    osc.connect(g); g.connect(lp); lp.connect(this.master);
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(.10, t+.25);
+    if(kind==='in'){        osc.frequency.setValueAtTime(294,t); osc.frequency.linearRampToValueAtTime(392,t+sec); }
+    else if(kind==='in2'){  osc.frequency.setValueAtTime(392,t); osc.frequency.linearRampToValueAtTime(440,t+sec); }
+    else if(kind==='out'){  osc.frequency.setValueAtTime(440,t); osc.frequency.linearRampToValueAtTime(262,t+sec); }
+    else {                  osc.frequency.setValueAtTime(330,t); g.gain.setValueAtTime(.04,t+.25); }
+    g.gain.setTargetAtTime(0.0001, t+sec-.3, .15);
+    osc.start(t); osc.stop(t+sec+.2);
+    this.breath={osc,g};
+  },
+  chime(){
+    if(!this.on) return;
+    const t=this.ctx.currentTime;
+    [523.25, 659.25].forEach((f,i)=>{
+      const o=this.ctx.createOscillator(), g=this.ctx.createGain();
+      o.type='sine'; o.frequency.value=f;
+      o.connect(g); g.connect(this.master);
+      const s=t+i*.35;
+      g.gain.setValueAtTime(0.0001,s);
+      g.gain.exponentialRampToValueAtTime(.14,s+.03);
+      g.gain.exponentialRampToValueAtTime(0.0001,s+1.6);
+      o.start(s); o.stop(s+1.8);
+    });
+  }
+};
+
+/* ------- モード選択 ------- */
+Object.entries(MODES).forEach(([key,m])=>{
+  const b=document.createElement('button');
+  b.className='mode'+(key===modeKey?' active':'');
+  b.textContent=m.name;
+  b.onclick=()=>{ if(running) stop(); modeKey=key; cyclesCount=m.cycles; updateCycVal();
+    document.querySelectorAll('.mode').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active'); renderIdle(); };
+  modesEl.appendChild(b);
+});
+
+function renderIdle(){
+  const m=MODES[modeKey];
+  modeDesc.textContent=m.desc;
+  phaseEl.textContent='準備OK';
+  countEl.textContent='';
+  cyclesEl.textContent='';
+  cycSel.style.display='flex';
+  updateCycVal();
+  orb.style.transition='transform .3s';
+  orb.style.transform='scale(.72)';
+  ringFg.style.transition='none';
+  ringFg.style.strokeDashoffset=CIRC;
+}
+
+function buzz(ms){ if(vib && navigator.vibrate) navigator.vibrate(ms); }
+
+/* ------- ミリ秒精度の呼吸エンジン ------- */
+function start(){
+  running=true;
+  goBtn.textContent='とめる';
+  goBtn.classList.add('stop');
+  cycSel.style.display='none';
+  const m=MODES[modeKey];
+  const total=cyclesCount;
+  let cycle=0, pi=0;
+
+  function runPhase(){
+    if(!running) return;
+    if(pi>=m.phases.length){ pi=0; cycle++; }
+    if(cycle>=total){ finish(); return; }
+    const p=m.phases[pi];
+    const ms=p.sec*1000;
+    cyclesEl.textContent=(cycle+1)+' / '+total+' サイクル';
+    phaseEl.textContent=p.label;
+    buzz(p.snd==='out'?[40,60,40]:40);
+    Snd.cue(p.snd, p.sec);
+
+    orb.style.transition='transform '+p.sec+'s cubic-bezier(.4,.1,.3,1)';
+    orb.style.transform='scale('+p.scale+')';
+    ringFg.style.transition='none';
+    ringFg.style.strokeDashoffset=CIRC;
+    requestAnimationFrame(()=>{ requestAnimationFrame(()=>{
+      ringFg.style.transition='stroke-dashoffset '+p.sec+'s linear';
+      ringFg.style.strokeDashoffset=0;
+    });});
+
+    // 残り秒の表示は100ms刻みで滑らかに
+    const startT=performance.now();
+    clearInterval(tickTimer);
+    countEl.textContent=Math.ceil(p.sec);
+    tickTimer=setInterval(()=>{
+      const remain=(ms-(performance.now()-startT))/1000;
+      if(remain>0) countEl.textContent=Math.ceil(remain);
+    },100);
+
+    clearTimeout(phaseTimer);
+    phaseTimer=setTimeout(()=>{ clearInterval(tickTimer); pi++; runPhase(); }, ms);
+  }
+  runPhase();
+}
+
+function finish(){
+  stop(false);
+  phaseEl.textContent='おつかれさま';
+  countEl.textContent='';
+  cyclesEl.textContent='肩を一度、下ろしてください';
+  buzz([60,80,60,80,120]);
+  Snd.chime();
+}
+
+function stop(reset=true){
+  running=false;
+  clearInterval(tickTimer);
+  clearTimeout(phaseTimer);
+  goBtn.textContent='はじめる';
+  goBtn.classList.remove('stop');
+  cycSel.style.display='flex';
+  if(reset) renderIdle();
+}
+
+goBtn.onclick=()=> running ? stop() : start();
+vibBtn.onclick=()=>{
+  vib=!vib;
+  vibBtn.textContent='振動 '+(vib?'ON':'OFF');
+  vibBtn.classList.toggle('on',vib);
+  if(vib) buzz(40);
+};
+sndBtn.onclick=async ()=>{
+  if(Snd.on){ Snd.disable(); sndBtn.textContent='音 OFF'; sndBtn.classList.remove('on'); }
+  else{ await Snd.enable(); sndBtn.textContent='音 ON'; sndBtn.classList.add('on'); }
+};
+
+renderIdle();
+</script>
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+}
+</script>
+</body>
+</html>
