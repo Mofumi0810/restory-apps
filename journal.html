@@ -119,11 +119,12 @@ textarea:focus{border-color:var(--thread)}
   <div class="actions">
     <button class="primary" id="toDaily">デイリーに追記</button>
     <button class="primary" id="toNew">新規ノートで保存</button>
+    <button class="primary" id="toMemo">メモに送る</button>
     <button id="copy">コピー</button>
     <button class="ghost" id="clear">クリア</button>
   </div>
 
-  <p class="note">保存ボタンでObsidianアプリが開き、ノートが作成されます。Vault名は一度入れたらこのページをブックマークすれば保持されます（URLに記録）。</p>
+  <p class="note">「デイリーに追記／新規ノート」はObsidianアプリが開いて保存されます（Vault名は一度入れればブックマークで保持）。「メモに送る」は共有メニューからApple Notesなど普通のメモアプリに送れます（Obsidian不要）。</p>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -250,6 +251,21 @@ $('toNew').onclick=()=>{
     +'name='+encodeURIComponent(name)
     +'&content='+encodeURIComponent(content);
   location.href=uri;
+};
+
+// メモに送る（共有シート → Apple Notes等。Obsidian不要）
+$('toMemo').onclick=async ()=>{
+  const t=getBody(); if(!t) return;
+  const d=new Date();
+  const stamp=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+' '+pad(d.getHours())+':'+pad(d.getMinutes());
+  const payload='声のジャーナル '+stamp+'\n\n'+t;
+  if(navigator.share){
+    try{ await navigator.share({text:payload}); }
+    catch(e){ /* ユーザーがキャンセル時は何もしない */ }
+  }else{
+    try{ await navigator.clipboard.writeText(payload); toast('コピーしました。メモに貼り付けてください'); }
+    catch(e){ textEl.select(); document.execCommand('copy'); toast('コピーしました'); }
+  }
 };
 
 $('copy').onclick=async ()=>{
