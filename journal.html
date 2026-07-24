@@ -124,7 +124,7 @@ textarea:focus{border-color:var(--thread)}
     <button class="ghost" id="clear">クリア</button>
   </div>
 
-  <p class="note">「デイリーに追記／新規ノート」はObsidianアプリが開いて保存されます（Vault名は一度入れればブックマークで保持）。「メモに送る」は共有メニューからApple Notesなど普通のメモアプリに送れます（Obsidian不要）。</p>
+  <p class="note">「デイリーに追記」は<b>Advanced URI プラグイン</b>が必要です（PC・スマホ両方に入れると、今日のデイリーノートへ確実に追記されます）。「新規ノートで保存」はプラグイン不要。「メモに送る」は共有メニューからApple Notesなど普通のメモアプリへ（Obsidian不要）。Vault名は一度入れればブックマークで保持されます。</p>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -231,14 +231,15 @@ function vaultParam(){
   return v?('vault='+encodeURIComponent(v)+'&'):'';
 }
 
-// デイリーノートに追記（## HH:mm 見出し付き）
+// デイリーノートに追記（Advanced URI: daily=true でObsidian設定のフォルダ/テンプレを尊重して今日のデイリーへ追記）
 $('toDaily').onclick=()=>{
   const t=getBody(); if(!t) return;
-  const content='\n## '+hm+' 声のジャーナル\n'+t+'\n';
-  const uri='obsidian://new?'+vaultParam()
-    +'name='+encodeURIComponent(dailyEl.value.trim())
-    +'&content='+encodeURIComponent(content)
-    +'&append=true';
+  const d=new Date();
+  const nowhm=pad(d.getHours())+':'+pad(d.getMinutes());
+  const content='\n## '+nowhm+' 声のジャーナル\n'+t+'\n';
+  const uri='obsidian://advanced-uri?'+vaultParam()
+    +'daily=true&mode=append'
+    +'&data='+encodeURIComponent(content);
   location.href=uri;
 };
 
